@@ -55,9 +55,21 @@ export default function toDirectLineJS(
       try {
         for (;;) {
           const iterator = asyncGeneratorWithLastValue(turnGenerator);
+          let firstIteration = true;
 
           for await (const activity of iterator) {
             await handleAcknowledgementOnce();
+
+            if (firstIteration) {
+              firstIteration = false;
+            } else {
+              // Yield control back to the browser's event loop after each activity.
+              // This ensures the UI remains responsive and can render activities progressively,
+              // preventing the main thread from being blocked during large activity batches.
+              // By yielding between every activity (not just streaming ones), we maintain
+              // consistent behavior and avoid UI freezes regardless of activity type.
+              await new Promise<void>(resolve => setTimeout(resolve, 0));
+            }
 
             observer.next(patchActivity(activity));
           }

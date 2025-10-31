@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added `*/*;q=0.8` to accept header, by [@compulim](https://github.com/compulim), in PR [#70](https://github.com/compulim/conversational-ai-chat-sdk/pull/70)
 - (Experimental) Added `createFetchArguments` for custom fetch calls, by [@compulim](https://github.com/compulim), in PR [#71](https://github.com/compulim/conversational-ai-chat-sdk/pull/71)
 - (Experimental) Added `resumeConversationId` to resume conversation, by [@compulim](https://github.com/compulim), in PR [#75](https://github.com/compulim/conversational-ai-chat-sdk/pull/75)
+- Added `setTimeout`-based sleep between every activity pushed to observable, by [@hatpick](https://github.com/hatpick) and [@compulim](https://github.com/compulim), in PR [#77](https://github.com/compulim/conversation-ai-chat-sdk/pull/77)
 
 ## [0.0.0] - 2023-08-19
 
