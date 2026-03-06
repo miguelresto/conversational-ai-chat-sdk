@@ -80,6 +80,18 @@ export default function toDirectLineJS(
           // If no activities received from bot, we should still acknowledge.
           await handleAcknowledgementOnce();
 
+          // Signal turn boundary deterministically.
+          observer.next(
+            patchActivity({
+              channelData: { isTurnEndMarker: true },
+              from: { id: 'bot', role: 'bot' },
+              id: v4() as ActivityId,
+              name: 'copilot-studio:turn-end',
+              type: 'event',
+              value: undefined
+            } as Activity)
+          );
+
           const executeTurn = iterator.lastValue();
           const result = await Promise.race([postActivityDeferred.promise, giveUpDeferred.promise]);
 

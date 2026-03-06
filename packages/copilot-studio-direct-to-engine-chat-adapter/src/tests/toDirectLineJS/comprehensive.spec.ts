@@ -119,16 +119,24 @@ describe('with a TurnGenerator', () => {
             test('should call the post activity observer', () => expect(postActivityObserver).toHaveBeenCalledTimes(1));
 
             describe('should call activity observer', () => {
-              test('twice', () => expect(activityObserver).toHaveBeenCalledTimes(3));
-              test('with the outgoing activity', () =>
+              test('4 times', () => expect(activityObserver).toHaveBeenCalledTimes(4));
+              test('with the turn-end sentinel', () =>
                 expect(activityObserver).toHaveBeenNthCalledWith(2, {
+                  channelData: { isTurnEndMarker: true },
+                  from: { id: 'bot', role: 'bot' },
+                  id: expect.any(String),
+                  name: 'copilot-studio:turn-end',
+                  type: 'event'
+                }));
+              test('with the outgoing activity', () =>
+                expect(activityObserver).toHaveBeenNthCalledWith(3, {
                   from: { id: 'u-00001' },
                   id: postActivityObserver.mock.calls[0][0],
                   text: 'Aloha!',
                   type: 'message'
                 }));
               test('with the incoming activity', () =>
-                expect(activityObserver).toHaveBeenNthCalledWith(3, {
+                expect(activityObserver).toHaveBeenNthCalledWith(4, {
                   from: { id: 'bot' },
                   text: 'Good morning.',
                   type: 'message'
@@ -171,16 +179,32 @@ describe('with a TurnGenerator', () => {
                     expect(postActivityObserver).toHaveBeenCalledTimes(1));
 
                   describe('should call the activity observer', () => {
-                    test('twice', () => expect(activityObserver).toHaveBeenCalledTimes(5));
+                    test('7 times', () => expect(activityObserver).toHaveBeenCalledTimes(7));
+                    test('with the first turn-end sentinel', () =>
+                      expect(activityObserver).toHaveBeenNthCalledWith(2, {
+                        channelData: { isTurnEndMarker: true },
+                        from: { id: 'bot', role: 'bot' },
+                        id: expect.any(String),
+                        name: 'copilot-studio:turn-end',
+                        type: 'event'
+                      }));
+                    test('with the second turn-end sentinel', () =>
+                      expect(activityObserver).toHaveBeenNthCalledWith(5, {
+                        channelData: { isTurnEndMarker: true },
+                        from: { id: 'bot', role: 'bot' },
+                        id: expect.any(String),
+                        name: 'copilot-studio:turn-end',
+                        type: 'event'
+                      }));
                     test('with the outgoing activity', () =>
-                      expect(activityObserver).toHaveBeenNthCalledWith(4, {
+                      expect(activityObserver).toHaveBeenNthCalledWith(6, {
                         from: { id: 'u-00001' },
                         id: postActivityObserver.mock.calls[0][0],
                         text: 'Goodbye.',
                         type: 'message'
                       }));
                     test('with the incoming activity', () =>
-                      expect(activityObserver).toHaveBeenNthCalledWith(5, {
+                      expect(activityObserver).toHaveBeenNthCalledWith(7, {
                         from: { id: 'bot' },
                         text: 'Bye.',
                         type: 'message'
