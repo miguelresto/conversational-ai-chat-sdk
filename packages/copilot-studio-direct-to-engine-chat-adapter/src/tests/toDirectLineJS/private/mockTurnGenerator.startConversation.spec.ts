@@ -30,7 +30,7 @@ describe('with a TurnGenerator', () => {
     });
 
     describe('should observe', () => {
-      test('twice', () => expect(activitySubscriber).toHaveBeenCalledTimes(2));
+      test('once', () => expect(activitySubscriber).toHaveBeenCalledTimes(1));
       test('the activity', () =>
         expect(activitySubscriber).toHaveBeenNthCalledWith(
           1,

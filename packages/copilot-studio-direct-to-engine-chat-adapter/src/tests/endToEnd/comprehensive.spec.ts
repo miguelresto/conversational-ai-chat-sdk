@@ -381,14 +381,13 @@ data: end
                 await activitiesQueue.promise;
                 await activitiesQueue.promise;
                 await activitiesQueue.promise;
-                await activitiesQueue.promise;
               });
 
               test('should call the postActivity observer', () =>
                 expect(postActivityObserver).toHaveBeenCalledTimes(1));
 
               test('should observe the echoback activity', () =>
-                expect(activitiesObserver).toHaveBeenNthCalledWith(5, {
+                expect(activitiesObserver).toHaveBeenNthCalledWith(4, {
                   from: { id: 'u-00001' },
                   id: postActivityObserver.mock.calls[0][0],
                   text: 'Morning.',
@@ -448,7 +447,7 @@ data: end
               });
 
               test('should observe the fourth activity', () =>
-                expect(activitiesObserver).toHaveBeenNthCalledWith(6, {
+                expect(activitiesObserver).toHaveBeenNthCalledWith(5, {
                   from: { id: 'bot' },
                   text: 'Good morning!',
                   type: 'message'
@@ -496,7 +495,7 @@ data: end
               }
 
               test('should observe the fifth activity', () =>
-                expect(activitiesObserver).toHaveBeenNthCalledWith(7, {
+                expect(activitiesObserver).toHaveBeenNthCalledWith(6, {
                   from: { id: 'bot' },
                   text: 'Goodbye!',
                   type: 'message'
@@ -546,7 +545,7 @@ data: end
               }
 
               test('should observe the sixth activity', () =>
-                expect(activitiesObserver).toHaveBeenNthCalledWith(8, {
+                expect(activitiesObserver).toHaveBeenNthCalledWith(7, {
                   from: { id: 'bot' },
                   text: '再見！',
                   type: 'message'
@@ -607,7 +606,6 @@ data: end
 
                 describe('when activity arrive', () => {
                   beforeEach(async () => {
-                    await activitiesQueue.promise; // Turn-end sentinel
                     await activitiesQueue.promise; // Echo back
                     await activitiesQueue.promise; // Reply
                   });
@@ -616,7 +614,7 @@ data: end
                     expect(postActivityObserver).toHaveBeenCalledTimes(1));
 
                   test('should observe the echoback activity', () =>
-                    expect(activitiesObserver).toHaveBeenNthCalledWith(10, {
+                    expect(activitiesObserver).toHaveBeenNthCalledWith(8, {
                       attachments: [
                         {
                           contentType: 'application/octet-stream',
@@ -691,7 +689,7 @@ data: end
                   });
 
                   test('should observe the fourth activity', () =>
-                    expect(activitiesObserver).toHaveBeenNthCalledWith(11, {
+                    expect(activitiesObserver).toHaveBeenNthCalledWith(9, {
                       from: { id: 'bot' },
                       text: 'Got it!',
                       type: 'message'

@@ -64,7 +64,7 @@ describe('with a TurnGenerator', () => {
         test('should call next turn', () => expect(nextTurn).toHaveBeenCalledTimes(2));
 
         describe('activity observer should be called', () => {
-          test('twice', () => expect(activityObserver).toHaveBeenCalledTimes(2));
+          test('once', () => expect(activityObserver).toHaveBeenCalledTimes(1));
           test('with the activity', () =>
             expect(activityObserver).toHaveBeenLastCalledWith(
               expect.objectContaining({

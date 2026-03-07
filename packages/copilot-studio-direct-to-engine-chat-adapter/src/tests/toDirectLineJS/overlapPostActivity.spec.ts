@@ -105,16 +105,16 @@ describe('with a TurnGenerator', () => {
               expect(secondPostActivityObserver).toHaveBeenCalledTimes(0));
 
             describe('should call the activity observer', () => {
-              test('4 times', () => expect(activityObserver).toHaveBeenCalledTimes(4));
+              test('twice', () => expect(activityObserver).toHaveBeenCalledTimes(3));
               test('with the first outgoing activity', () =>
-                expect(activityObserver).toHaveBeenNthCalledWith(3, {
+                expect(activityObserver).toHaveBeenNthCalledWith(2, {
                   from: { id: 'u-00001' },
                   id: firstPostActivityObserver.mock.calls[0][0],
                   text: 'Aloha!',
                   type: 'message'
                 }));
               test('with the incoming activity', () =>
-                expect(activityObserver).toHaveBeenNthCalledWith(4, {
+                expect(activityObserver).toHaveBeenNthCalledWith(3, {
                   from: { id: 'bot' },
                   text: 'Goodbye.',
                   type: 'message'

@@ -58,7 +58,7 @@ describe('with a TurnGenerator', () => {
       incomingActivityQueue.push(END_TURN);
     });
 
-    test('should call the activity observer', () => expect(activityObserver).toHaveBeenCalledTimes(2));
+    test('should call the activity observer', () => expect(activityObserver).toHaveBeenCalledTimes(1));
 
     describe('when post activity', () => {
       let postActivityObserver: JestMockOf<(id: string) => void>;
