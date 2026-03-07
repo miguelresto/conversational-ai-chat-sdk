@@ -27,13 +27,8 @@ function once<T>(fn: (value: T) => Promise<void> | void): (value: T) => Promise<
   };
 }
 
-type Options = {
-  emitTurnEndMarker?: boolean;
-};
-
 export default function toDirectLineJS(
-  halfDuplexChatAdapter: TurnGenerator,
-  { emitTurnEndMarker = false }: Options = {}
+  halfDuplexChatAdapter: TurnGenerator
 ): DirectLineJSBotConnection & { giveUp: () => void } {
   let giveUpDeferred = promiseWithResolvers<void>();
   let postActivityDeferred =
@@ -84,20 +79,6 @@ export default function toDirectLineJS(
 
           // If no activities received from bot, we should still acknowledge.
           await handleAcknowledgementOnce();
-
-          // Signal turn boundary deterministically.
-          if (emitTurnEndMarker) {
-            observer.next(
-              patchActivity({
-                channelData: { isTurnEndMarker: true },
-                from: { id: 'bot', role: 'bot' },
-                id: v4() as ActivityId,
-                name: 'copilot-studio:turn-end',
-                type: 'event',
-                value: undefined
-              } as Activity)
-            );
-          }
 
           const executeTurn = iterator.lastValue();
           const result = await Promise.race([postActivityDeferred.promise, giveUpDeferred.promise]);

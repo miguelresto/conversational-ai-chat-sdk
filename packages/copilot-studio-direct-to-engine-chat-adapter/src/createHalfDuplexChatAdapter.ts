@@ -1,8 +1,10 @@
 import { boolean, minLength, object, optional, pipe, string, type InferInput } from 'valibot';
+import { v4 } from 'uuid';
 import DirectToEngineChatAdapterAPI from './private/DirectToEngineChatAdapterAPI/DirectToEngineChatAdapterAPI';
 import { directToEngineChatAdapterAPIInitSchema } from './private/DirectToEngineChatAdapterAPI/DirectToEngineChatAdapterAPIInit';
 import { type ExecuteTurnInit, type HalfDuplexChatAdapterAPI } from './private/types/HalfDuplexChatAdapterAPI';
 import { type Activity } from './types/Activity';
+import { type ActivityId } from './types/DirectLineJSBotConnection';
 import { type Strategy } from './types/Strategy';
 
 type ExecuteTurnFunction = (activity: Activity, init?: ExecuteTurnInit | undefined) => TurnGenerator;
@@ -25,7 +27,21 @@ type CreateHalfDuplexChatAdapterInit = InferInput<typeof createHalfDuplexChatAda
 
 type TurnGenerator = AsyncGenerator<Activity, ExecuteTurnFunction, undefined>;
 
+async function* yieldTurnEndMarkerIfEnabled(strategy: Strategy): AsyncGenerator<Activity> {
+  if (strategy.emitTurnEndMarker) {
+    yield {
+      channelData: { isTurnEndMarker: true },
+      from: { id: 'bot', role: 'bot' },
+      id: v4() as ActivityId,
+      name: 'copilot-studio:turn-end',
+      type: 'event',
+      value: undefined
+    } as Activity;
+  }
+}
+
 const createExecuteTurn = (
+  strategy: Strategy,
   api: HalfDuplexChatAdapterAPI,
   init: CreateHalfDuplexChatAdapterInit | undefined
 ): ExecuteTurnFunction => {
@@ -44,8 +60,9 @@ const createExecuteTurn = (
 
     return (async function* () {
       yield* api.executeTurn(activity);
+      yield* yieldTurnEndMarkerIfEnabled(strategy);
 
-      return createExecuteTurn(api, init);
+      return createExecuteTurn(strategy, api, init);
     })();
   };
 };
@@ -70,9 +87,10 @@ export default function createHalfDuplexChatAdapter(
         emitStartConversationEvent: init.emitStartConversationEvent ?? true,
         locale: init.locale
       });
+      yield* yieldTurnEndMarkerIfEnabled(strategy);
     }
 
-    return createExecuteTurn(api, init);
+    return createExecuteTurn(strategy, api, init);
   })();
 }
 
