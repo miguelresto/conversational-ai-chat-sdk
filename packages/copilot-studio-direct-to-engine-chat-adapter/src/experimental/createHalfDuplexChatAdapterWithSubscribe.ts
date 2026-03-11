@@ -44,9 +44,9 @@ type CreateHalfDuplexChatAdapterWithSubscribeInit = InferInput<
 type TurnGenerator = AsyncGenerator<Activity, ExecuteTurnFunction, undefined>;
 
 const createExecuteTurn = (
+  strategy: Strategy,
   api: HalfDuplexChatAdapterAPI,
-  init: CreateHalfDuplexChatAdapterWithSubscribeInit | undefined,
-  strategy: Strategy = {} as Strategy
+  init: CreateHalfDuplexChatAdapterWithSubscribeInit | undefined
 ): ExecuteTurnFunction => {
   let obsoleted = false;
 
@@ -65,7 +65,7 @@ const createExecuteTurn = (
       yield* api.executeTurn(activity);
       yield* yieldTurnEndMarkerIfEnabled(strategy);
 
-      return createExecuteTurn(api, init, strategy);
+      return createExecuteTurn(strategy, api, init);
     })();
   };
 };
@@ -101,7 +101,7 @@ export default function createHalfDuplexChatAdapter(
       yield* yieldTurnEndMarkerIfEnabled(strategy);
     }
 
-    return createExecuteTurn(api, init, strategy);
+    return createExecuteTurn(strategy, api, init);
   })();
 }
 
